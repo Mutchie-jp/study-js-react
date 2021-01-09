@@ -1,85 +1,68 @@
-// returnを省略したアロー関数 ＊処理が一行のときは省略できる＊
-// const func1 = (num) => num + 1;
-// console.log(func1(1));
+import "./styles.css";
 
-// returnを省略しない場合
-// const func2 = (num1, num2) => {
-//   return num1 + num2;
-// };
-// console.log(func2(1, 2));
+const onClickAdd = () => {
+  const inputText = document.getElementById("add-text").value;
+  document.getElementById("add-text").value = "";
+  createIncompleteList(inputText);
+};
 
-/**
- * 分割代入
- */
-// const myProfile = {
-// name: "Mutchie",
-// age: 19
-// };
-// const myProfileArray = ["Mutchie", 19];
+// 未完了リストから指定の要素を削除
+const deleteFromIncompleteList = (target) => {
+  const deleteTarget = target;
+  document.getElementById("incomplete-list").removeChild(deleteTarget);
+};
 
-// 配列やオブジェクトで可能
-// const { name, age } = myProfile;
-// const [name, age] = myProfileArray;
-// const message = `名前：${name}\n年齢：${age}`;
-// console.log(message);
+// 未完了リストに追加する関数
+const createIncompleteList = (text) => {
+  // divタグ生成
+  const div = document.createElement("div");
+  div.className = "list-row";
 
-//　引数のデフォルト値を設定できる
-// const sayHello = (name = "Mutchie") => console.log(`こんにちは、${name}さん！`);
-// sayHello();
+  // liタグ生成
+  const li = document.createElement("li");
+  li.innerText = text;
 
-/**
- * スプレット構文
- */
-//　配列の展開
-// const array1 = [1, 2];
-// console.log(array1);
-// console.log(...array1);
+  // buttonタグ生成
+  const completeButton = document.createElement("button");
+  const deleteButton = document.createElement("button");
+  completeButton.innerText = "完了";
+  completeButton.addEventListener("click", () => {
+    deleteFromIncompleteList(completeButton.parentNode);
+    const div = document.createElement("div");
+    const li = document.createElement("li");
+    const returnButton = document.createElement("button");
+    div.className = "list-row";
+    li.innerText = text;
 
-// const sumFunc = (num1, num2) => console.log(num1 + num2);
-// sumFunc(...array1);
+    // 戻るボタン
+    returnButton.innerText = "戻す";
+    returnButton.addEventListener("click", () => {
+      // 押された戻すボタンの親タグを完了リストから削除
+      const deleteTarget = returnButton.parentNode;
+      document.getElementById("complete-list").removeChild(deleteTarget);
 
-//　まとめて複数の変数に代入
-// const array2 = [1, 2, 3, 4, 5];
-// const [num1, num2, ...array3] = array2;
-// console.log(arr3);
+      // テキスト取得
+      const text = returnButton.parentNode.firstElementChild.innerText;
+      createIncompleteList(text);
+    });
 
-// 配列のコピー、結合
-// const array4 = [10, 20];
-// const array5 = [30, 40];
-// const array6 = [...array4];
-// console.log(array6);
+    div.appendChild(li);
+    div.appendChild(returnButton);
+    document.getElementById("complete-list").appendChild(div);
+  });
+  deleteButton.innerText = "削除";
+  deleteButton.addEventListener("click", () => {
+    deleteFromIncompleteList(deleteButton.parentNode);
+  });
+  // divタグの子要素に各要素を設定
+  div.appendChild(li);
+  div.appendChild(completeButton);
+  div.appendChild(deleteButton);
 
-// const array7 = [...array4, ...array5];
-// console.log(array7);
+  // 未完了リストに追加
+  document.getElementById("incomplete-list").appendChild(div);
+};
 
-// const array8 = array4;
-// console.log(array8);
-// array8[0] = 9999;
-//そのまま代入してしまうと参照がおなじになってしまう
-// console.log(array8);
-// console.log(array4);
-
-/**
- * map や filterを使った配列の処理
- */
-
-//for文での書き方
-// const nameArr = ["mutchie", "sk", "wow"];
-// for (let index = 0; index < nameArr.length; index++) {
-//   console.log(nameArr[index]);
-// }
-
-//map
-// nameArr.map((name) => console.log(name));
-//mapは2つ目の引数を取るとインデックスが入る。
-
-//filter
-// const numArr = [1, 2, 3, 4, 5];
-// const numArrOdd = numArr.filter((num) => num % 2 === 1);
-// console.log(numArrOdd);
-
-// || はまたはという意味ではなく、正確には、左がfalseなら右を返す
-// && は左がTrueなら右を返す
-const num = null;
-const fee = num || "金額未設定です。";
-console.log(fee);
+document
+  .getElementById("add-button")
+  .addEventListener("click", () => onClickAdd());
